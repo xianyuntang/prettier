@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.xianyuntang.prettier.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.xianyuntang.prettier.MyBundle
 
 class MyApplicationService {
 
