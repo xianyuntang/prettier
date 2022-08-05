@@ -2,17 +2,31 @@
 <idea-plugin>
     <id>com.github.xianyuntang.prettier</id>
     <name>prettier</name>
-    <vendor>xianyuntang</vendor>
+    <vendor>xt1800i</vendor>
+
+    <description>
+    <![CDATA[
+    <p>This prettier plugin will search for the nearest prettier whom formats the code by
+    <p>Press Ctrl + Alt + K to use it</p>
+    </p>
+    ]]>
+    </description>
 
     <depends>com.intellij.modules.platform</depends>
 
+
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.xianyuntang.prettier.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.xianyuntang.prettier.services.MyProjectService"/>
+        <applicationService serviceImplementation="com.github.xianyuntang.prettier.services.ApplicationService"/>
+        <projectService serviceImplementation="com.github.xianyuntang.prettier.services.ProjectService"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.xianyuntang.prettier.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+    <actions>
+        <action
+                id="org.intellij.sdk.action.PopupDialogAction"
+                class="com.github.xianyuntang.prettier.actions.PrettierAction"
+                text="Run Prettier"
+                description="Prettier format">
+            <keyboard-shortcut first-keystroke="control alt K" keymap="$default"/>
+        </action>
+    </actions>
 </idea-plugin>
