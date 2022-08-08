@@ -20,21 +20,30 @@ internal class PrettierAction : AnAction() {
         val file: VirtualFile? = e.getData(PlatformDataKeys.VIRTUAL_FILE)
         val project: Project? = e.getData(PlatformDataKeys.PROJECT)
         if (file !== null && project !== null) {
-            val prettierPath = this.findPrettier(Paths.get(file.path), Paths.get(project.basePath!!))
-            if (prettierPath === null) {
-                CommonDataKeys.EDITOR.getData(e.dataContext)
-                    ?.let { HintManager.getInstance().showErrorHint(it, "Prettier Not Found") };
-            }
-            val process = Runtime.getRuntime().exec("$prettierPath ${file.path}")
-            val prettierOutput = readProcessOutput(process)
             val document = FileDocumentManager.getInstance().getDocument(file)
             if (document !== null) {
-                ApplicationManager.getApplication().runWriteAction {
-                    document.setText(
-                        prettierOutput
-                    )
+                println('1')
+                FileDocumentManager.getInstance().saveDocument(document)
+                println(file.extension)
+                if (file.extension == "ts" || file.extension == "tsx" || file.extension == "js" || file.extension == "jsx") {
+                    val prettierPath = this.findPrettier(Paths.get(file.path), Paths.get(project.basePath!!))
+                    println(prettierPath)
+                    if (prettierPath === null) {
+                        CommonDataKeys.EDITOR.getData(e.dataContext)
+                            ?.let { HintManager.getInstance().showErrorHint(it, "Prettier not found") };
+                    }
+                    val process = Runtime.getRuntime().exec("$prettierPath ${file.path}")
+                    val prettierOutput = readProcessOutput(process)
+                    println(prettierOutput)
+                    ApplicationManager.getApplication().runWriteAction {
+                        document.setText(
+                            prettierOutput
+                        )
+                    }
                 }
             }
+
+
         }
     }
 
@@ -49,6 +58,7 @@ internal class PrettierAction : AnAction() {
             return this.findPrettier(currentPath.parent, stopPath)
         }
     }
+
     private fun readProcessOutput(process: Process): String {
         val bufferedReader: BufferedReader = process.inputStream.bufferedReader()
         val iterator = bufferedReader.lineSequence().iterator()
